@@ -1,5 +1,5 @@
 {
-  "name": "tlack",
+  "name": "kcals",
   "version": "0.1.0",
   "description": "A minimalist Slack cli for when you don't want to quit your terminal to send one message",
   "main": "index.js",
@@ -13,6 +13,7 @@
   "dependencies": {
     "import-jsx": "2.0.0",
     "ink": "0.3.0",
-    "react": "16.8.5"
+    "react": "16.8.5",
+    "slack": "11.0.2"
   }
 }

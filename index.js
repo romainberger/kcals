@@ -4,17 +4,20 @@ const os = require('os')
 const importJsx = require('import-jsx')
 const { h, render } = require('ink')
 
-const configPath = path.join(os.homedir(), 'tlack.json')
-console.log(configPath)
+const configPath = path.join(os.homedir(), 'kcals.config.json')
 
-try {
+const main = () => {
     const config = require(configPath)
     const ui = importJsx('./ui')
 
     render(h(ui, { config }))
 }
+
+try {
+    main()
+}
 catch(e) {
-    console.log('Missing tlack.json config file.')
+    console.log('Missing ~/kcals.config.json config file.')
     console.log('Please check out the readme to create your config file.')
     process.exit()
 }
