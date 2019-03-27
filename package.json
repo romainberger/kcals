@@ -3,12 +3,23 @@
   "version": "0.1.0",
   "description": "A minimalist Slack cli for when you don't want to quit your terminal to send one message",
   "main": "index.js",
+  "bin": {
+    "kcals": "./index.js",
+  },
   "keywords": [
     "cli",
     "slack",
     "terminal"
   ],
   "author": "Romain Berger <romain@romainberger.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/romainberger/kcals.git"
+  },
+  "bugs": {
+    "url": "https://github.com/romainberger/kcals/issues"
+  },
+  "homepage": "https://github.com/romainberger/kcals#readme",
   "license": "MIT",
   "dependencies": {
     "import-jsx": "2.0.0",

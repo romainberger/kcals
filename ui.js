@@ -60,8 +60,10 @@ class Kcals extends Component {
     }
 
     getMatchingUsers() {
+        const value = this.state.person.toLowerCase()
+
         return this.state.users.filter(u => {
-            return (u.name.length || u.real_name.length) && (u.name.includes(this.state.person) || (u.real_name && u.real_name.includes(this.state.person)))
+            return (u.name.length || u.real_name.length) && (u.name.toLowerCase().includes(value) || (u.real_name && u.real_name.toLowerCase().includes(value)))
         }).slice(0, 5)
     }
 
@@ -83,9 +85,9 @@ class Kcals extends Component {
                             <div>
                                 {
                                     selectionIndex === index ? (
-                                        <Text green key={ user.id }>{ displayName }</Text>
+                                        <Text green key={ user.id }>   { displayName }</Text>
                                     ) : (
-                                        <Text grey key={ user.id }>{ displayName }</Text>
+                                        <Text grey key={ user.id }>   { displayName }</Text>
                                     )
                                 }
                             </div>
@@ -131,14 +133,15 @@ class Kcals extends Component {
         return (
             <div>
                 <div>
-                    { this.state.input === "message" && <Text green>✔︎ </Text> }
+                    { this.state.input === "message" ? <Text green>✔︎ </Text> : "  " }
                     <Text bold cyan>@{ this.state.input === "person" ? this.state.person : this.getUserDisplayName(this.state.user) }</Text>
                 </div>
                 {
                     this.state.input === "person" && this.renderAutocomplete()
                 }
-                <div><Text>{ this.state.message }</Text></div>
-
+                {
+                    this.state.input === "message" && <div><Text>  { this.state.message }</Text></div>
+                }
             </div>
         )
     }
