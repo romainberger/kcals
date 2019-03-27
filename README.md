@@ -16,6 +16,6 @@ $ kcals
 
 ## Todo
 
-- create config file if it does not exist
+- fix config file creation (use ink)
 - add gif to readme to show how it works
 - take arguments to use as a command
