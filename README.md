@@ -35,6 +35,7 @@ $ kcals @romain
 - check for new version every once in a while and display a short message
 - fix config file creation (use ink)
 - improve usage with arguments
+- improve user matching by ignore accents (é / e)
 
 ## License
 
