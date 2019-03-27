@@ -13,7 +13,7 @@ const main = () => {
     const config = require(configPath)
     const ui = importJsx('./src/Kcals')
 
-    const receiver = process.argv.find(arg => arg[0] === '@')
+    const receiver = process.argv.find(arg => arg[0] === '@') || ''
     let message
 
     if (receiver) {
