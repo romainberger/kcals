@@ -19,6 +19,7 @@ try {
     main()
 }
 catch(e) {
+    console.log(e)
     console.log('Missing ~/kcals.config.json config file.')
     console.log('Please check out the readme to create your config file.')
     process.exit()

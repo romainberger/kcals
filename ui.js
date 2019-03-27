@@ -1,15 +1,50 @@
 const { h, Component, Text } = require('ink')
 const Slack = require('slack')
 
+class Cursor extends Component {
+    blink() {
+        this.setState({
+            visible: !this.state.visible,
+        })
+
+        this.interval = setTimeout(this.blink, 500)
+    }
+
+    constructor() {
+        super()
+
+        this.blink = this.blink.bind(this)
+
+        this.state = {
+            visible: true,
+        }
+    }
+
+    componentDidMount() {
+        this.blink()
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.interval)
+    }
+
+    render() {
+        return <span><Text white>{ this.state.visible ? '▎' : ' ' }</Text></span>
+    }
+}
+
 class Kcals extends Component {
     onKeyPress(e, data) {
         switch (data.name) {
             case "return":
+                const matchingUsers = this.getMatchingUsers()
                 if (this.state.input === "person") {
-                    this.setState({
-                        input: "message",
-                        user: this.getMatchingUsers()[this.state.selectionIndex],
-                    })
+                    if (matchingUsers.length) {
+                        this.setState({
+                            input: "message",
+                            user: matchingUsers[this.state.selectionIndex],
+                        })
+                    }
                     return
                 }
 
@@ -46,6 +81,10 @@ class Kcals extends Component {
     }
 
     async sendMessage() {
+        if (!this.state.user || !this.state.message.replace(/\s/g, '').length) {
+            return
+        }
+
         await this.slack.chat.postMessage({
             channel: this.state.user.id,
             as_user: true,
@@ -61,6 +100,10 @@ class Kcals extends Component {
 
     getMatchingUsers() {
         const value = this.state.person.toLowerCase()
+
+        if (!value.replace(/\s/g, '').length) {
+            return []
+        }
 
         return this.state.users.filter(u => {
             return (u.name.length || u.real_name.length) && (u.name.toLowerCase().includes(value) || (u.real_name && u.real_name.toLowerCase().includes(value)))
@@ -134,13 +177,13 @@ class Kcals extends Component {
             <div>
                 <div>
                     { this.state.input === "message" ? <Text green>✔︎ </Text> : "  " }
-                    <Text bold cyan>@{ this.state.input === "person" ? this.state.person : this.getUserDisplayName(this.state.user) }</Text>
+                    <Text bold cyan>@{ this.state.input === "person" ? <span>{ this.state.person }<Cursor /></span> : this.getUserDisplayName(this.state.user) }</Text>
                 </div>
                 {
                     this.state.input === "person" && this.renderAutocomplete()
                 }
                 {
-                    this.state.input === "message" && <div><Text>  { this.state.message }</Text></div>
+                    this.state.input === "message" && <div><Text>  { this.state.message }<Cursor /></Text></div>
                 }
             </div>
         )
