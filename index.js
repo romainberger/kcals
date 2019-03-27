@@ -13,7 +13,20 @@ const main = () => {
     const config = require(configPath)
     const ui = importJsx('./src/Kcals')
 
-    render(h(ui, { config }))
+    const receiver = process.argv.find(arg => arg[0] === '@')
+    let message
+
+    if (receiver) {
+        const index = process.argv.indexOf(receiver)
+        message = process.argv.slice([index + 1])
+        message = message.join(' ') || null
+    }
+
+    render(h(ui, {
+        config,
+        message,
+        receiver: receiver.replace('@', ''),
+    }))
 }
 
 if (fs.existsSync(configPath)) {

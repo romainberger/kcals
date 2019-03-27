@@ -123,8 +123,8 @@ class Kcals extends Component {
 
         this.state = {
             input: 'person',
-            message: '',
-            person: '',
+            message: this.props.message || '',
+            person: this.props.receiver || '',
             selectionIndex: 0,
             sent: false,
             users: [],

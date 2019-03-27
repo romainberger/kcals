@@ -19,5 +19,4 @@ $ kcals
 ## Todo
 
 - fix config file creation (use ink)
-- add gif to readme to show how it works
-- take arguments to use as a command
+- improve usage with arguments
