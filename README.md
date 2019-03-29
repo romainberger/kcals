@@ -27,6 +27,8 @@ $ kcals @romain hello how are you
 
 If there is a single match with the name provided, the message will be sent directly.
 
+![Kcals](https://raw.githubusercontent.com/romainberger/kcals/master/kcals-2.gif)
+
 You can also simply give the name of the receiver:
 
 ```shell
