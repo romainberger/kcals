@@ -64,12 +64,17 @@ class Kcals extends Component {
             as_user: true,
             text: this.state.message,
         })
-        this.setState({ sent: true }, process.exit)
+
+        this.setState({
+            sent: true,
+        }, process.exit)
     }
 
-    async fetchUsers() {
-        const users = await this.slack.users.list()
-        this.setState({ users: users.members.filter(user => !user.deleted) })
+    fetchUsers() {
+        return new Promise(async resolve => {
+            const users = await this.slack.users.list()
+            this.setState({ users: users.members.filter(user => !user.deleted) }, resolve)
+        })
     }
 
     getMatchingUsers() {
@@ -119,6 +124,26 @@ class Kcals extends Component {
         return user.profile.display_name || user.real_name || user.name
     }
 
+    // if we have valid receiver and message, and there is only one user match
+    // send the message immediately
+    checkArgumentInput(cb) {
+        if (!this.state.person.length || !this.state.message.length) {
+            cb()
+            return
+        }
+
+        const matchingUsers = this.getMatchingUsers(this.state.person)
+
+        if (matchingUsers.length === 1) {
+            this.setState({
+                user: matchingUsers[0],
+            }, this.sendMessage)
+        }
+        else {
+            cb()
+        }
+    }
+
     async checkUpdate() {
         // check new versions about once a month because it can be annoying
         // also if the user let us do it
@@ -147,10 +172,21 @@ class Kcals extends Component {
         }
     }
 
+    async start() {
+        await this.fetchUsers()
+
+        this.checkArgumentInput(() => {
+            this.setState({ started: true })
+            process.stdin.on('keypress', this.onKeyPress)
+            this.checkUpdate()
+        })
+    }
+
     constructor(props) {
         super(props)
 
         this.onKeyPress = this.onKeyPress.bind(this)
+        this.sendMessage = this.sendMessage.bind(this)
 
         this.state = {
             input: 'person',
@@ -159,29 +195,33 @@ class Kcals extends Component {
             person: this.props.receiver || '',
             selectionIndex: 0,
             sent: false,
+            started: false,
             users: [],
             user: null,
         }
 
         this.slack = new Slack({ token: this.props.config.token })
-        this.fetchUsers()
-        this.checkUpdate()
-    }
-
-    componentDidMount() {
-        process.stdin.on('keypress', this.onKeyPress)
+        this.start()
     }
 
     render() {
         if (this.state.sent) {
-            return (
-                <div>
-                    <div><Text green>✔︎ Message sent to { this.getUserDisplayName(this.state.user) }</Text></div>
-                    {
-                        this.state.newVersion ? <div><Text grey>An update for Kcals is available! ({ this.state.newVersion })</Text></div> : null
-                    }
-                </div>
-            )
+            const successMessage = <Text green>✔︎ Message sent to { this.getUserDisplayName(this.state.user) }</Text>
+
+            if (this.state.newVersion) {
+                return (
+                    <div>
+                        <div>{ successMessage }</div>
+                        <div><Text grey>An update for Kcals is available! ({ this.state.newVersion })</Text></div>
+                    </div>
+                )
+            }
+
+            return successMessage
+        }
+
+        if (!this.state.started) {
+            return null
         }
 
         return (

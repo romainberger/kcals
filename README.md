@@ -18,13 +18,16 @@ On the first use, Kcals will ask you a token, generate one here: [https://api.sl
 $ kcals
 ```
 
-You can also give the receiver and message directly (work in progress to improve this):
+You can also give the receiver and message directly:
 
 ```shell
+$ # kcals [receiver] [message]
 $ kcals @romain hello how are you
 ```
 
-or simply give the receiver:
+If there is a single match with the name provided, the message will be sent directly.
+
+You can also simply give the name of the receiver:
 
 ```shell
 $ kcals @romain
@@ -33,7 +36,6 @@ $ kcals @romain
 ## Todo
 
 - fix display after config file creation (use ink)
-- improve usage with arguments
 - paste does not work
 - support new line with cmd + enter?
 
