@@ -4,6 +4,9 @@ const importJsx = require('import-jsx')
 
 const Cursor = importJsx('./Cursor')
 
+const currentVersion = require('./../package').version
+const helper = require('./helper')
+
 class Kcals extends Component {
     onKeyPress(e, data) {
         switch (data.name) {
@@ -116,6 +119,34 @@ class Kcals extends Component {
         return user.profile.display_name || user.real_name || user.name
     }
 
+    async checkUpdate() {
+        // check new versions about once a month because it can be annoying
+        // also if the user let us do it
+        if (this.props.config["check-updates"] === false) {
+            return
+        }
+
+        const lastUpdateCheck = this.props.config.lastUpdateCheck || false
+        const delay = 1000 * 60 * 60 * 24 * 30
+        let saveLastCheckTime = !lastUpdateCheck
+
+        if (!lastUpdateCheck || Date.now() - lastUpdateCheck > delay) {
+            const newVersion = await helper.hasUpdate(currentVersion)
+
+            this.setState({ newVersion })
+            saveLastCheckTime = true
+        }
+
+        if (saveLastCheckTime) {
+            const newConfig = {
+                ...this.props.config,
+                lastUpdateCheck: Date.now(),
+            }
+
+            helper.writeConfigFile(newConfig)
+        }
+    }
+
     constructor(props) {
         super(props)
 
@@ -124,6 +155,7 @@ class Kcals extends Component {
         this.state = {
             input: 'person',
             message: this.props.message || '',
+            newVersion: false,
             person: this.props.receiver || '',
             selectionIndex: 0,
             sent: false,
@@ -133,6 +165,7 @@ class Kcals extends Component {
 
         this.slack = new Slack({ token: this.props.config.token })
         this.fetchUsers()
+        this.checkUpdate()
     }
 
     componentDidMount() {
@@ -141,7 +174,14 @@ class Kcals extends Component {
 
     render() {
         if (this.state.sent) {
-            return <Text green>✔︎ Message sent to { this.getUserDisplayName(this.state.user) }</Text>
+            return (
+                <div>
+                    <div><Text green>✔︎ Message sent to { this.getUserDisplayName(this.state.user) }</Text></div>
+                    {
+                        this.state.newVersion ? <div><Text grey>An update for Kcals is available! ({ this.state.newVersion })</Text></div> : null
+                    }
+                </div>
+            )
         }
 
         return (

@@ -32,10 +32,10 @@ $ kcals @romain
 
 ## Todo
 
-- check for new version every once in a while and display a short message
-- fix config file creation (use ink)
+- fix display after config file creation (use ink)
 - improve usage with arguments
-- improve user matching by ignore accents (é / e)
+- paste does not work
+- support new line with cmd + enter?
 
 ## License
 

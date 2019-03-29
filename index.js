@@ -1,16 +1,11 @@
 #!/usr/bin/env node
-
-const fs = require('fs')
-const path = require('path')
-const os = require('os')
 const readline = require('readline')
 const importJsx = require('import-jsx')
 const { h, render } = require('ink')
 
-const configPath = path.join(os.homedir(), '.kcals.config.json')
+const helper = require('./src/helper')
 
-const main = () => {
-    const config = require(configPath)
+const main = (config) => {
     const ui = importJsx('./src/Kcals')
 
     const receiver = process.argv.find(arg => arg[0] === '@') || ''
@@ -29,8 +24,8 @@ const main = () => {
     }))
 }
 
-if (fs.existsSync(configPath)) {
-    main()
+if (helper.getConfig()) {
+    main(helper.getConfig())
 }
 else {
     const rl = readline.createInterface({
@@ -42,13 +37,14 @@ else {
         const content = {
             token: res,
         }
-        fs.writeFile(configPath, JSON.stringify(content), { flag: 'w' }, err => {
+
+        helper.writeConfigFile(content, err => {
             if (err) {
                 console.log('Something wrong happened, sorry.')
             }
             else {
                 console.log('Thank you!\n')
-                main()
+                main(helper.getConfig())
             }
         })
     })

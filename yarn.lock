@@ -554,6 +554,11 @@ scheduler@^0.13.5:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
+semver@6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-6.0.0.tgz#05e359ee571e5ad7ed641a6eec1e547ba52dea65"
+  integrity sha512-0UewU+9rFapKFnlbirLi3byoOuhrSsli/z/ihNnvM24vgF+8sNBiI1LZPBSH9wJKUwaUbw+s3hToDLCXkrghrQ==
+
 slack@11.0.2:
   version "11.0.2"
   resolved "https://registry.yarnpkg.com/slack/-/slack-11.0.2.tgz#30f68527c5d1712b7faa3141db7716f89ac6e911"
