@@ -5,6 +5,7 @@ const Slack = require('slack')
 const importJsx = require('import-jsx')
 
 const Cursor = importJsx('./Cursor')
+const Loader = importJsx('./Loader')
 
 const currentVersion = require('./../package').version
 const helper = require('./helper')
@@ -65,6 +66,10 @@ class Kcals extends Component {
             return
         }
 
+        this.setState({
+            sending: true,
+        })
+
         await this.slack.chat.postMessage({
             channel: this.state.user.id,
             as_user: true,
@@ -72,6 +77,7 @@ class Kcals extends Component {
         })
 
         this.setState({
+            sending: false,
             sent: true,
         }, process.exit)
     }
@@ -158,6 +164,10 @@ class Kcals extends Component {
         if (!lastUpdateCheck || Date.now() - lastUpdateCheck > delay) {
             const newVersion = await helper.hasUpdate(currentVersion)
 
+            if (!this.mounted) {
+                return
+            }
+
             this.setState({ newVersion })
             saveLastCheckTime = true
         }
@@ -193,6 +203,7 @@ class Kcals extends Component {
             newVersion: false,
             person: this.props.receiver || '',
             selectionIndex: 0,
+            sending: false,
             sent: false,
             started: false,
             users: [],
@@ -237,8 +248,8 @@ class Kcals extends Component {
             return successMessage
         }
 
-        if (!this.state.started) {
-            return null
+        if (!this.state.started || this.state.sending) {
+            return <Loader />
         }
 
         return (
