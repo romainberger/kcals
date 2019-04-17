@@ -1,4 +1,6 @@
-const { h, Component, Text } = require('ink')
+const React = require('react')
+const { Component, PureComponent } = require('react')
+const { Box, Color, StdinContext } = require('ink')
 const Slack = require('slack')
 const importJsx = require('import-jsx')
 
@@ -9,6 +11,10 @@ const helper = require('./helper')
 
 class Kcals extends Component {
     onKeyPress(e, data) {
+        if (!this.mounted) {
+            return
+        }
+
         switch (data.name) {
             case "return":
                 const matchingUsers = this.getMatchingUsers()
@@ -98,25 +104,19 @@ class Kcals extends Component {
         const { selectionIndex } = this.state
 
         return (
-            <div>
+            <Box width="100%" flexDirection="column">
                 {
                     matchingUsers.map((user, index) => {
                         const displayName = this.getUserDisplayName(user)
 
                         return (
-                            <div>
-                                {
-                                    selectionIndex === index ? (
-                                        <Text green key={ user.id }>   { displayName }</Text>
-                                    ) : (
-                                        <Text grey key={ user.id }>   { displayName }</Text>
-                                    )
-                                }
-                            </div>
+                            <Box width="100%" key={ user.id }>
+                                <Color green={ selectionIndex === index } grey={ selectionIndex !== index }>   { displayName }</Color>
+                            </Box>
                         )
                     })
                 }
-            </div>
+            </Box>
         )
     }
 
@@ -177,7 +177,6 @@ class Kcals extends Component {
 
         this.checkArgumentInput(() => {
             this.setState({ started: true })
-            process.stdin.on('keypress', this.onKeyPress)
             this.checkUpdate()
         })
     }
@@ -200,20 +199,38 @@ class Kcals extends Component {
             user: null,
         }
 
+        this.mounted = true
+
         this.slack = new Slack({ token: this.props.config.token })
+    }
+
+    componentDidMount() {
+        const { stdin, setRawMode } = this.props
+
+        setRawMode(true)
+        stdin.on('keypress', this.onKeyPress)
+
         this.start()
+    }
+
+    componentWillUnmount() {
+        const { stdin, setRawMode } = this.props
+
+        stdin.removeListener('data', this.onKeyPress)
+        setRawMode(false)
+        this.mounted = false
     }
 
     render() {
         if (this.state.sent) {
-            const successMessage = <Text green>✔︎ Message sent to { this.getUserDisplayName(this.state.user) }</Text>
+            const successMessage = <Color green>✔︎ Message sent to { this.getUserDisplayName(this.state.user) }</Color>
 
             if (this.state.newVersion) {
                 return (
-                    <div>
-                        <div>{ successMessage }</div>
-                        <div><Text grey>An update for Kcals is available! ({ this.state.newVersion })</Text></div>
-                    </div>
+                    <Box width="100%" flexDirection="column">
+                        <Box>{ successMessage }</Box>
+                        <Box><Color grey>An update for Kcals is available! ({ this.state.newVersion })</Color></Box>
+                    </Box>
                 )
             }
 
@@ -225,20 +242,34 @@ class Kcals extends Component {
         }
 
         return (
-            <div>
-                <div>
-                    { this.state.input === "message" ? <Text green>✔︎ </Text> : "  " }
-                    <Text bold cyan>@{ this.state.input === "person" ? <span>{ this.state.person }<Cursor /></span> : this.getUserDisplayName(this.state.user) }</Text>
-                </div>
+            <Box width="100%" flexDirection="column">
+                <Box width="100%">
+                    { this.state.input === "message" ? <Color green>✔︎ </Color> : "  " }
+                    <Color bold cyan>@{ this.state.input === "person" ? <Box>{ this.state.person }<Cursor /></Box> : this.getUserDisplayName(this.state.user) }</Color>
+                </Box>
                 {
                     this.state.input === "person" && this.renderAutocomplete()
                 }
                 {
-                    this.state.input === "message" && <div><Text>  { this.state.message }<Cursor /></Text></div>
+                    this.state.input === "message" && <Box width="100%"><Color>  { this.state.message }<Cursor /></Color></Box>
                 }
-            </div>
+            </Box>
         )
     }
 }
 
-module.exports = Kcals
+class App extends PureComponent {
+    render() {
+        return (
+            <StdinContext.Consumer>
+                {
+                    ({ stdin, setRawMode }) => (
+                        <Kcals {...this.props} stdin={ stdin } setRawMode={ setRawMode } />
+                    )
+                }
+            </StdinContext.Consumer>
+        );
+    }
+}
+
+module.exports = App

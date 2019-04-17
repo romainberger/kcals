@@ -1,4 +1,6 @@
-const { h, Component, Text } = require('ink')
+const React = require('react')
+const { Component } = require('react')
+const { Color } = require('ink')
 
 class Cursor extends Component {
     blink() {
@@ -28,7 +30,7 @@ class Cursor extends Component {
     }
 
     render() {
-        return <span><Text white>{ this.state.visible ? '▎' : ' ' }</Text></span>
+        return <Color white>{ this.state.visible ? '▎' : ' ' }</Color>
     }
 }
 

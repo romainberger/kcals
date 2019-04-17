@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 const readline = require('readline')
 const importJsx = require('import-jsx')
-const { h, render } = require('ink')
+const { render } = require('ink')
+const { createElement } = require('react')
 
 const helper = require('./src/helper')
 
@@ -17,7 +18,7 @@ const main = (config) => {
         message = message.join(' ') || null
     }
 
-    render(h(ui, {
+    render(createElement(ui, {
         config,
         message,
         receiver: receiver.replace('@', ''),
