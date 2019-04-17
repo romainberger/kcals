@@ -35,6 +35,12 @@ You can also simply give the name of the receiver:
 $ kcals @romain
 ```
 
+## Autocompletion
+
+To activate autocompletion with Kcals, copy the file `kcals-completion.bash` to your user directory and add `source ~/kcals-completion.bash` to your `.bash_profile`. You can now use kcals with autocompletion for users:
+
+![Kcals](https://raw.githubusercontent.com/romainberger/kcals/master/kcals-3.gif)
+
 ## Todo
 
 - fix display after config file creation (use ink)
