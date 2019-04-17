@@ -9,7 +9,8 @@
   "keywords": [
     "cli",
     "slack",
-    "terminal"
+    "terminal",
+    "ink"
   ],
   "author": "Romain Berger <romain@romainberger.com>",
   "repository": {
