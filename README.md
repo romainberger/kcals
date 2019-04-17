@@ -37,7 +37,7 @@ $ kcals @romain
 
 ## Autocompletion
 
-To activate autocompletion with Kcals, copy the file `kcals-completion.bash` to your user directory and add `source ~/kcals-completion.bash` to your `.bash_profile`. You can now use kcals with autocompletion for users:
+To activate autocompletion with Kcals, copy the file `kcals-completion.bash` to your user directory then add `. ~/kcals-completion.bash` to your `.bash_profile`. You can now use kcals with autocompletion for users:
 
 ![Kcals](https://raw.githubusercontent.com/romainberger/kcals/master/kcals-3.gif)
 
