@@ -60,6 +60,7 @@ fi
 
 ## Todo
 
+- use cached users for main app (+ add an argument to clear cache if needed)
 - fix display after config file creation (use ink)
 - paste does not work
 - support new line with cmd + enter?

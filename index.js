@@ -1,16 +1,17 @@
 #!/usr/bin/env node
-const readline = require('readline')
-const importJsx = require('import-jsx')
-const { render } = require('ink')
-const { createElement } = require('react')
-
-const helper = require('./src/helper')
 
 if (process.argv.includes('__get_completion_users')) {
     // for autocompletion
     require('./src/getUsers')()
 }
 else {
+    const readline = require('readline')
+    const importJsx = require('import-jsx')
+    const { render } = require('ink')
+    const { createElement } = require('react')
+
+    const helper = require('./src/helper')
+
     const main = (config) => {
         const ui = importJsx('./src/Kcals')
 
