@@ -1,6 +1,6 @@
 {
   "name": "kcals",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "A minimalist Slack cli for when you don't want to quit your terminal to send one message",
   "main": "index.js",
   "bin": {
