@@ -18,10 +18,12 @@ On the first use, Kcals will ask you a token, generate one here: [https://api.sl
 $ kcals
 ```
 
-You can also give the receiver and message directly:
+When you'll start typing the name of the recipient a list of suggestion will be displayed. You can navigate through them with the up and down arrows, and select the one you want with enter.
+
+You can also give the recipient and message directly:
 
 ```shell
-$ # kcals [receiver] [message]
+$ # kcals [recipient] [message]
 $ kcals @romain hello how are you
 ```
 
@@ -29,7 +31,7 @@ If there is a single match with the name provided, the message will be sent dire
 
 ![Kcals](https://raw.githubusercontent.com/romainberger/kcals/master/kcals-2.gif)
 
-You can also simply give the name of the receiver:
+You can also simply give the name of the recipient:
 
 ```shell
 $ kcals @romain
