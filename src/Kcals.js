@@ -16,6 +16,12 @@ class Kcals extends Component {
             return
         }
 
+        clearTimeout(this.typingTimeout)
+        this.typingTimeout = setTimeout(() => {
+            this.setState({ typing: false })
+        }, 250)
+        this.setState({ typing: true })
+
         switch (data.name) {
             case "return":
                 const matchingUsers = this.getMatchingUsers()
@@ -206,11 +212,13 @@ class Kcals extends Component {
             sending: false,
             sent: false,
             started: false,
+            typing: false,
             users: [],
             user: null,
         }
 
         this.mounted = true
+        this.typingTimeout = null
 
         this.slack = new Slack({ token: this.props.config.token })
     }
@@ -256,13 +264,13 @@ class Kcals extends Component {
             <Box width="100%" flexDirection="column">
                 <Box width="100%">
                     { this.state.input === "message" ? <Color green>✔︎ </Color> : "  " }
-                    <Color bold cyan>@{ this.state.input === "person" ? <Box>{ this.state.person }<Cursor /></Box> : this.getUserDisplayName(this.state.user) }</Color>
+                    <Color bold cyan>@{ this.state.input === "person" ? <Box>{ this.state.person }<Cursor typing={ this.state.typing } /></Box> : this.getUserDisplayName(this.state.user) }</Color>
                 </Box>
                 {
                     this.state.input === "person" && this.renderAutocomplete()
                 }
                 {
-                    this.state.input === "message" && <Box width="100%"><Color>  { this.state.message }<Cursor /></Color></Box>
+                    this.state.input === "message" && <Box width="100%"><Color>  { this.state.message }<Cursor typing={ this.state.typing } /></Color></Box>
                 }
             </Box>
         )

@@ -5,7 +5,7 @@ const { Color } = require('ink')
 class Cursor extends Component {
     blink() {
         this.setState({
-            visible: !this.state.visible,
+            visible: this.props.typing ? true : !this.state.visible,
         })
 
         this.interval = setTimeout(this.blink, 500)

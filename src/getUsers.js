@@ -22,7 +22,6 @@ const getUsersList = () => {
             const config = helper.getConfig()
             const slack = new Slack({ token: config.token })
 
-            // todo cache for like one day to avoid too many requests
             const rawUsers = await slack.users.list()
 
             const users = rawUsers.members.reduce((acc, user) => {

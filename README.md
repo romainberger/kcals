@@ -60,11 +60,22 @@ if [ -f ~/kcals-completion.bash ]; then
 fi
 ```
 
+## Development
+
+```shell
+# clone the repo
+# install the dependencies
+$ yarn
+
+# to test the cli run:
+$ ./index.js
+```
+
 ## Todo
 
 - use cached users for main app (+ add an argument to clear cache if needed)
 - fix display after config file creation (use ink)
-- paste does not work
+- paste acte weird sometimes
 - support new line with cmd + enter?
 
 ## License
