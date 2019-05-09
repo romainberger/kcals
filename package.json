@@ -25,6 +25,7 @@
   "dependencies": {
     "import-jsx": "2.0.0",
     "ink": "2.1.1",
+    "ink-link": "1.0.0",
     "react": "16.8.5",
     "semver": "6.0.0",
     "slack": "11.0.2"

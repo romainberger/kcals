@@ -3,6 +3,7 @@ const { Component, PureComponent } = require('react')
 const { Box, Color, StdinContext } = require('ink')
 const Slack = require('slack')
 const importJsx = require('import-jsx')
+const Link = require('ink-link')
 
 const Cursor = importJsx('./Cursor')
 const Loader = importJsx('./Loader')
@@ -76,7 +77,7 @@ class Kcals extends Component {
             sending: true,
         })
 
-        await this.slack.chat.postMessage({
+        const result = await this.slack.chat.postMessage({
             channel: this.state.user.id,
             as_user: true,
             text: this.state.message,
@@ -85,13 +86,21 @@ class Kcals extends Component {
         this.setState({
             sending: false,
             sent: true,
+            channel: result.channel,
         }, process.exit)
     }
 
-    fetchUsers() {
+    fetchData() {
         return new Promise(async resolve => {
-            const users = await this.slack.users.list()
-            this.setState({ users: users.members.filter(user => !user.deleted) }, resolve)
+            Promise.all([
+                this.slack.users.list(),
+                this.slack.team.info(),
+            ]).then(([ users, team ]) => {
+                this.setState({
+                    users: users.members.filter(user => !user.deleted),
+                    team: team.team,
+                }, resolve)
+            })
         })
     }
 
@@ -189,7 +198,7 @@ class Kcals extends Component {
     }
 
     async start() {
-        await this.fetchUsers()
+        await this.fetchData()
 
         this.checkArgumentInput(() => {
             this.setState({ started: true })
@@ -242,7 +251,11 @@ class Kcals extends Component {
 
     render() {
         if (this.state.sent) {
-            const successMessage = <Color green>✔︎ Message sent to { this.getUserDisplayName(this.state.user) }</Color>
+            const successMessage = (
+                <Link url={ `slack://channel?team=${this.state.team.id}&id=${this.state.channel}` }>
+                    <Color green>✔︎ Message sent to { this.getUserDisplayName(this.state.user) }</Color>
+                </Link>
+            )
 
             if (this.state.newVersion) {
                 return (
