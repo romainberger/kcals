@@ -18,8 +18,9 @@ class Kcals extends Component {
 
         clearTimeout(this.typingTimeout)
         this.typingTimeout = setTimeout(() => {
-            this.setState({ typing: false })
+            this.mounted && this.setState({ typing: false })
         }, 250)
+
         this.setState({ typing: true })
 
         switch (data.name) {
@@ -277,18 +278,16 @@ class Kcals extends Component {
     }
 }
 
-class App extends PureComponent {
-    render() {
-        return (
-            <StdinContext.Consumer>
-                {
-                    ({ stdin, setRawMode }) => (
-                        <Kcals {...this.props} stdin={ stdin } setRawMode={ setRawMode } />
-                    )
-                }
-            </StdinContext.Consumer>
-        );
-    }
+const App = (props) => {
+    return (
+        <StdinContext.Consumer>
+            {
+                ({ stdin, setRawMode }) => (
+                    <Kcals { ...props } stdin={ stdin } setRawMode={ setRawMode } />
+                )
+            }
+        </StdinContext.Consumer>
+    )
 }
 
 module.exports = App

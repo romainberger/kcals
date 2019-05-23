@@ -1,37 +1,21 @@
 const React = require('react')
-const { Component } = require('react')
+const { useEffect, useState } = React
 const { Color } = require('ink')
 
-class Cursor extends Component {
-    blink() {
-        this.setState({
-            visible: this.props.typing ? true : !this.state.visible,
-        })
+const Cursor = ({ typing }) => {
+    const [ visible, setVisible ] = useState(true)
 
-        this.interval = setTimeout(this.blink, 500)
-    }
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setVisible(!visible)
+        }, 500)
 
-    constructor() {
-        super()
-
-        this.blink = this.blink.bind(this)
-
-        this.state = {
-            visible: true,
+        return () => {
+            clearTimeout(timeout)
         }
-    }
+    })
 
-    componentDidMount() {
-        this.blink()
-    }
-
-    componentWillUnmount() {
-        clearTimeout(this.interval)
-    }
-
-    render() {
-        return <Color white>{ this.state.visible ? '▎' : ' ' }</Color>
-    }
+    return <Color white>{ visible || typing ? '▎' : ' ' }</Color>
 }
 
 module.exports = Cursor
